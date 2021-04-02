@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           tabs: [
             Tab(
               icon: Icon(Icons.category),
-              text: 'Categories',
+              text: 'Products',
             ),
             Tab(
               icon: Icon(Icons.favorite),
