@@ -10,24 +10,24 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Container(
-        decoration: BoxDecoration(
-          // border: Border.all(
-          //   color: Colors.black,
-          //   width: 1,
-          // ),
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black87,
-              offset: Offset(2, 2),
-              blurRadius: 3,
-            ),
-          ]
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
+    return Container(
+      decoration: BoxDecoration(
+        // border: Border.all(
+        //   color: Colors.black,
+        //   width: 1,
+        // ),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black87,
+            offset: Offset(2, 2),
+            blurRadius: 3,
+          ),
+        ]
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: GestureDetector(
           child: GridTile(
             child: Image.network(
               product.imageUrl,
@@ -53,13 +53,9 @@ class ProductItem extends StatelessWidget {
               ),
             ),
           ),
+          onTap: () => Navigator.of(context).pushNamed('/product', arguments: product)
         ),
       ),
-      splashColor: Theme.of(context).primaryColor,
-      borderRadius: BorderRadius.circular(15),
-      onTap: () {
-        // Navigator.of(context).pushNamed('/meals', arguments: category);
-      },
     );
   }
 }

@@ -1,8 +1,7 @@
+import 'package:daily_shop/models/products.dart';
 import 'package:flutter/material.dart';
 
-import '../models/meal.dart';
-
-class MealDetailPage extends StatelessWidget {
+class ProductDetailPage extends StatelessWidget {
   Widget buildSectionTitle(BuildContext context, String title) {
     return Container(
       child: Text(
@@ -42,10 +41,10 @@ class MealDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Meal meal = ModalRoute.of(context)?.settings.arguments as Meal;
+    final Product product = ModalRoute.of(context)?.settings.arguments as Product;
 
     return Scaffold(
-      appBar: AppBar(title: Text(meal.title)),
+      appBar: AppBar(title: Text(product.title)),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -54,22 +53,16 @@ class MealDetailPage extends StatelessWidget {
               width: double.infinity,
               height: 300,
               child: Image.network(
-                meal.imageUrl ?? '',
+                product.imageUrl,
                 fit: BoxFit.cover,
               ),
             ),
-            buildSectionTitle(context, 'Ingredients'),
-            buildList(context, meal.ingredients ?? []),
-            buildSectionTitle(context, 'Steps'),
-            buildList(context, meal.steps ?? []),
+            // buildSectionTitle(context, 'Ingredients'),
+            // buildList(context, meal.ingredients ?? []),
+            // buildSectionTitle(context, 'Steps'),
+            // buildList(context, meal.steps ?? []),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.delete),
-        onPressed: () {
-          Navigator.of(context).pop(meal.id);
-        },
       ),
     );
   }
