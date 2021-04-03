@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 
-import '../models/products.dart';
+import 'product.dart';
+
+enum ProductsFilter {
+  All,
+  OnlyFavorite,
+}
 
 class Products with ChangeNotifier {
   List<Product> _items = [
@@ -40,6 +45,18 @@ class Products with ChangeNotifier {
 
   List<Product> get items {
     return [..._items];
+  }
+
+  List<Product> getFilteredItems(ProductsFilter filter) {
+    if (filter == ProductsFilter.OnlyFavorite) {
+      return _items.where((item) => item.isFavorite).toList();
+    }
+
+    return this.items;
+  }
+
+  Product findById(String id) {
+    return _items.firstWhere((p) => p.id == id);
   }
 
   void addItem() {

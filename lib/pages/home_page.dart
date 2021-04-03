@@ -1,8 +1,9 @@
-import 'package:daily_shop/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 
+import 'package:daily_shop/widgets/main_drawer.dart';
 import 'products_overview_page.dart';
 import 'favorites_page.dart';
+import '../providers/products.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,6 +12,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  ProductsFilter _filter = ProductsFilter.All;
 
   @override
   void initState() {
@@ -34,11 +36,32 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return Scaffold(
       appBar: AppBar(
         title: const Text('Daily Shop'),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(
+                  child: Text('All'),
+                  value: ProductsFilter.All,
+                ),
+                PopupMenuItem(
+                  child: Text('Only Favorites'),
+                  value: ProductsFilter.OnlyFavorite,
+                )
+              ];
+            },
+            onSelected: (ProductsFilter filter) {
+              setState(() {
+                _filter = filter;
+              });
+            },
+          ),
+        ],
       ),
       body: TabBarView(
         controller: _tabController,
         children: [
-          ProductsOverviewPage(),
+          ProductsOverviewPage(_filter),
           FavoritesPage(),
         ],
       ),

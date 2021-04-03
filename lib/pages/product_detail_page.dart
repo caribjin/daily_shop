@@ -1,47 +1,14 @@
-import 'package:daily_shop/models/products.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:daily_shop/providers/products.dart';
+import 'package:daily_shop/providers/product.dart';
 
 class ProductDetailPage extends StatelessWidget {
-  Widget buildSectionTitle(BuildContext context, String title) {
-    return Container(
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.headline6,
-      ),
-      width: double.infinity,
-      color: Colors.black12,
-      // alignment: Alignment.centerRight,
-      padding: EdgeInsets.all(10),
-    );
-  }
-
-  Widget buildList(BuildContext context, List<String> elements) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 8,
-        bottom: 12,
-      ),
-      child: Column(
-        children: elements.map((element) {
-          return Container(
-            width: double.infinity,
-            child: Card(
-              elevation: 3,
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(element),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final Product product = ModalRoute.of(context)?.settings.arguments as Product;
+    final String productId = ModalRoute.of(context)?.settings.arguments as String;
+    final Product product = Provider.of<Products>(context, listen: false).findById(productId);
 
     return Scaffold(
       appBar: AppBar(title: Text(product.title)),
