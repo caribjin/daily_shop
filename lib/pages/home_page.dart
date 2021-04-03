@@ -1,6 +1,9 @@
+import 'package:daily_shop/providers/cart.dart';
+import 'package:daily_shop/widgets/badge.dart';
 import 'package:flutter/material.dart';
 
 import 'package:daily_shop/widgets/main_drawer.dart';
+import 'package:provider/provider.dart';
 import 'products_overview_page.dart';
 import 'favorites_page.dart';
 import '../providers/products.dart';
@@ -37,7 +40,20 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       appBar: AppBar(
         title: const Text('Daily Shop'),
         actions: [
+          Consumer<Cart>(
+            builder: (_, cart, child) {
+              return Badge(
+                child: child!,
+                value: cart.itemCount.toString(),
+              );
+            },
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {},
+            ),
+          ),
           PopupMenuButton(
+            initialValue: _filter,
             itemBuilder: (BuildContext context) {
               return [
                 PopupMenuItem(

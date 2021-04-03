@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/product.dart';
+import 'package:daily_shop/providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Product product = Provider.of<Product>(context, listen: false);
+    final Cart cart = Provider.of<Cart>(context, listen: false);
 
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), boxShadow: [
@@ -44,10 +46,14 @@ class ProductItem extends StatelessWidget {
                     // textAlign: TextAlign.center,
                   ),
                   subtitle: Text('\$${product.price.toString()}'),
-                  trailing: IconButton(
-                    iconSize: 20,
-                    icon: Icon(Icons.shopping_cart),
-                    onPressed: () {  },
+                  trailing: Consumer<Cart>(
+                    builder: (context, cart, _) => IconButton(
+                      iconSize: 20,
+                      icon: Icon(Icons.shopping_cart),
+                      onPressed: () {
+                        cart.addItem(product);
+                      },
+                    ),
                   ),
                   backgroundColor: Colors.black45,
                 ),
