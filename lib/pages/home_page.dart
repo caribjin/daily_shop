@@ -1,3 +1,4 @@
+import 'package:daily_shop/pages/cart_page.dart';
 import 'package:daily_shop/providers/cart.dart';
 import 'package:daily_shop/widgets/badge.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     super.initState();
 
     _tabController = TabController(
-      length: 2,
+      length: 3,
       vsync: this,
       initialIndex: 0,
     );
@@ -49,7 +50,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             },
             child: IconButton(
               icon: Icon(Icons.shopping_cart),
-              onPressed: () {},
+              onPressed: () {
+                // Navigator.of(context).pushNamed('/cart');
+              },
             ),
           ),
           PopupMenuButton(
@@ -78,6 +81,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         controller: _tabController,
         children: [
           ProductsOverviewPage(_filter),
+          CartPage(),
           FavoritesPage(),
         ],
       ),
@@ -86,10 +90,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         color: Theme.of(context).primaryColor,
         child: TabBar(
           controller: _tabController,
+          indicatorColor: Colors.white,
           tabs: [
             Tab(
               icon: Icon(Icons.category),
               text: 'Products',
+            ),
+            Tab(
+              icon: Icon(Icons.shopping_cart),
+              text: 'Cart',
             ),
             Tab(
               icon: Icon(Icons.favorite),

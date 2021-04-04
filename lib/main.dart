@@ -1,11 +1,11 @@
-import 'package:daily_shop/providers/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// import 'pages/category_meals_page.dart';
 import 'pages/home_page.dart';
 import 'pages/product_detail_page.dart';
 import 'pages/settings_page.dart';
+import 'package:daily_shop/pages/cart_page.dart';
+import 'package:daily_shop/providers/cart.dart';
 
 import 'providers/products.dart';
 
@@ -30,9 +30,10 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (context) => HomePage(),
-          '/product': (context) => ProductDetailPage(),
-          '/settings': (context) => SettingsPage(),
+          '/': (_) => HomePage(),
+          '/product': (_) => ProductDetailPage(),
+          '/cart': (_) => CartPage(),
+          '/settings': (_) => SettingsPage(),
         },
       ),
     );
