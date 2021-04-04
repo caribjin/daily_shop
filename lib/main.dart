@@ -1,3 +1,5 @@
+import 'package:daily_shop/pages/orders_page.dart';
+import 'package:daily_shop/providers/orders.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<Products>(create: (_) => Products()),
         ChangeNotifierProvider<Cart>(create: (_) => Cart()),
+        ChangeNotifierProvider<Orders>(create: (_) => Orders()),
       ],
       child: MaterialApp(
         title: 'Daily Shop',
@@ -33,6 +36,7 @@ class MyApp extends StatelessWidget {
           '/': (_) => HomePage(),
           '/product': (_) => ProductDetailPage(),
           '/cart': (_) => CartPage(),
+          '/orders': (_) => OrdersPage(),
           '/settings': (_) => SettingsPage(),
         },
       ),

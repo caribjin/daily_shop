@@ -26,7 +26,7 @@ class MainDrawer extends StatelessWidget {
             width: double.infinity,
             height: 120,
             padding: EdgeInsets.all(20),
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).primaryColor,
             alignment: Alignment.centerLeft,
             child: Text(
               'Cooking Up',
@@ -38,8 +38,8 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20),
-          buildListMenu('Meals', Icons.restaurant, () => Navigator.of(context).pushReplacementNamed('/')),
-          buildListMenu('Settings', Icons.settings, () => Navigator.of(context).pushReplacementNamed('/settings')),
+          buildListMenu('Products', Icons.shop, () => Navigator.of(context).pushNamed('/')),
+          buildListMenu('Orders', Icons.payment, () => Navigator.of(context).pushNamed('/orders')),
         ],
       ),
     );
