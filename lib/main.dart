@@ -1,13 +1,14 @@
-import 'package:daily_shop/pages/orders_page.dart';
-import 'package:daily_shop/providers/orders.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'pages/home_page.dart';
-import 'pages/product_detail_page.dart';
-import 'pages/settings_page.dart';
+import 'package:daily_shop/pages/home_page.dart';
+import 'package:daily_shop/pages/product_detail_page.dart';
+import 'package:daily_shop/pages/settings_page.dart';
 import 'package:daily_shop/pages/cart_page.dart';
 import 'package:daily_shop/providers/cart.dart';
+import 'package:daily_shop/pages/edit_product_page.dart';
+import 'package:daily_shop/pages/orders_page.dart';
+import 'package:daily_shop/providers/orders.dart';
 
 import 'providers/products.dart';
 
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
           '/': (_) => HomePage(),
           '/product': (_) => ProductDetailPage(),
           '/cart': (_) => CartPage(),
+          '/edit': (_) => EditProductPage(),
           '/orders': (_) => OrdersPage(),
           '/settings': (_) => SettingsPage(),
         },
