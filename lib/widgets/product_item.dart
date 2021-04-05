@@ -11,7 +11,8 @@ class ProductItem extends StatelessWidget {
     final Cart cart = Provider.of<Cart>(context, listen: false);
 
     return Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), boxShadow: [
+      decoration:
+          BoxDecoration(borderRadius: BorderRadius.circular(15), boxShadow: [
         BoxShadow(
           color: Colors.black87,
           offset: Offset(2, 2),
@@ -32,9 +33,13 @@ class ProductItem extends StatelessWidget {
                   leading: Consumer<Product>(
                     builder: (context, product, _) => IconButton(
                       iconSize: 20,
-                      color: product.isFavorite ? Theme.of(context).accentColor : null,
+                      color: product.isFavorite
+                          ? Theme.of(context).accentColor
+                          : null,
                       icon: Icon(
-                        product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                        product.isFavorite
+                            ? Icons.favorite
+                            : Icons.favorite_border,
                       ),
                       onPressed: () {
                         product.toggleFavoriteState();
@@ -52,6 +57,20 @@ class ProductItem extends StatelessWidget {
                       icon: Icon(Icons.shopping_cart),
                       onPressed: () {
                         cart.addItem(product);
+
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Added item to cart.',
+                            ),
+                            duration: Duration(seconds: 3),
+                            action: SnackBarAction(
+                              label: 'UNDO',
+                              onPressed: () => cart.removeSingleItem(product.id),
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -59,7 +78,8 @@ class ProductItem extends StatelessWidget {
                 ),
               ),
             ),
-            onTap: () => Navigator.of(context).pushNamed('/product', arguments: product.id)),
+            onTap: () => Navigator.of(context)
+                .pushNamed('/product', arguments: product.id)),
       ),
     );
   }
