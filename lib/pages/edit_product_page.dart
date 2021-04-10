@@ -1,5 +1,7 @@
 import 'package:daily_shop/providers/product.dart';
+import 'package:daily_shop/providers/products.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditProductPage extends StatefulWidget {
   @override
@@ -7,38 +9,44 @@ class EditProductPage extends StatefulWidget {
 }
 
 class _EditProductPageState extends State<EditProductPage> {
-  final _titleFocusNode = FocusNode();
-  final _priceFocusNode = FocusNode();
-  final _descriptionFocusNode = FocusNode();
+  String _id = '';
+
   final _imageUrlController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
-
   final _form = GlobalKey<FormState>();
-  var _newProduct = Product(
-    id: '',
-    title: '',
-    price: 0.0,
-    description: '',
-    imageUrl: '',
-    isFavorite: false
-  );
+  var _editingProduct = Product(id: '', title: '', price: 0.0, description: '', imageUrl: '');
+
+  bool _isInit = true;
 
   @override
   void initState() {
     super.initState();
-
     _imageUrlFocusNode.addListener(_handleUpdateImageUrl);
   }
 
   @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      var argId = ModalRoute.of(context)?.settings.arguments;
+
+      if (argId != null) {
+        _id = argId as String;
+        _editingProduct = Provider.of<Products>(context, listen: false).findById(_id);
+        _imageUrlController.text = _editingProduct.imageUrl; // imageUrl은 controller가 지정되어 있으므로, 값을 직접 넣어준다.
+      }
+    }
+
+    _isInit = false;
+
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
-    _titleFocusNode.dispose();
-    _priceFocusNode.dispose();
-    _descriptionFocusNode.dispose();
+    _imageUrlFocusNode.removeListener(_handleUpdateImageUrl);
+
     _imageUrlController.dispose();
     _imageUrlFocusNode.dispose();
-
-    _imageUrlFocusNode.removeListener(_handleUpdateImageUrl);
 
     super.dispose();
   }
@@ -49,17 +57,22 @@ class _EditProductPageState extends State<EditProductPage> {
     }
   }
 
-  void _handleSaveForm() {
+  void _handleSaveForm(BuildContext context) {
     bool validated = _form.currentState!.validate();
 
     if (!validated) return;
 
     _form.currentState!.save();
 
-    print(_newProduct.title);
-    print(_newProduct.price);
-    print(_newProduct.description);
-    print(_newProduct.imageUrl);
+    final productsData = Provider.of<Products>(context, listen: false);
+
+    if (_id == '') {
+      productsData.addItem(_editingProduct);
+    } else {
+      productsData.updateItem(_id, _editingProduct);
+    }
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -70,7 +83,7 @@ class _EditProductPageState extends State<EditProductPage> {
         actions: [
           TextButton(
             child: Text('SAVE'),
-            onPressed: _handleSaveForm,
+            onPressed: () => _handleSaveForm(context),
             style: TextButton.styleFrom(primary: Colors.white),
           ),
         ],
@@ -83,56 +96,64 @@ class _EditProductPageState extends State<EditProductPage> {
             child: Column(
               children: [
                 TextFormField(
+                  initialValue: _editingProduct.title,
                   decoration: const InputDecoration(
                     labelText: 'Title',
                   ),
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
-                  focusNode: _titleFocusNode,
-                  onFieldSubmitted: (_) {
-                    FocusScope.of(context).requestFocus(_priceFocusNode);
-                  },
                   onSaved: (value) {
-                    _newProduct.title = value!;
+                    _editingProduct.title = value!;
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a title';
                     }
+
                     return null;
                   },
                 ),
                 TextFormField(
+                  initialValue: _editingProduct.price.toString(),
                   decoration: const InputDecoration(
                     labelText: 'Price',
                   ),
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.next,
-                  focusNode: _priceFocusNode,
-                  onFieldSubmitted: (_) {
-                    FocusScope.of(context).requestFocus(_titleFocusNode);
-                  },
                   onSaved: (value) {
-                    if (value == null || value.isEmpty) return;
-
-                    _newProduct.price = double.parse(value);
+                    _editingProduct.price = double.parse(value!);
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a price';
+                      return 'Please enter a price.';
+                    } else if (double.tryParse(value) == null) {
+                      return 'Please enter a valid number.';
+                    } else if (double.parse(value) <= 0) {
+                      return 'Please enter a number greater than zero.';
                     }
+
                     return null;
                   },
                 ),
                 TextFormField(
+                  initialValue: _editingProduct.description,
                   decoration: const InputDecoration(
                     labelText: 'Description',
                   ),
-                  focusNode: _descriptionFocusNode,
                   maxLines: 3,
                   keyboardType: TextInputType.multiline,
                   onSaved: (value) {
-                    _newProduct.description = value!;
+                    _editingProduct.description = value!;
+                  },
+                  maxLength: 100,
+                  validator: (value) {
+                    if (value == null) return null;
+
+                    if (value.isNotEmpty && value.length > 100) {
+                      return 'The description can\'t exceed 100 characters.';
+                    }
+
+                    return null;
                   },
                 ),
                 Row(
@@ -144,7 +165,15 @@ class _EditProductPageState extends State<EditProductPage> {
                       decoration: BoxDecoration(
                         border: Border.all(width: 1, color: Colors.grey),
                       ),
-                      child: _imageUrlController.text.isEmpty ? Text('Enter a url') : Image.network(_imageUrlController.text, fit: BoxFit.cover),
+                      child: _imageUrlController.text.isEmpty
+                          ? Text('Enter a url')
+                          : Image.network(
+                              _imageUrlController.text,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, object, stackTrace) {
+                                return Text('Error');
+                              },
+                            ),
                     ),
                     Expanded(
                       child: TextFormField(
@@ -156,18 +185,23 @@ class _EditProductPageState extends State<EditProductPage> {
                         keyboardType: TextInputType.url,
                         textInputAction: TextInputAction.done,
                         onFieldSubmitted: (_) {
-                          _handleSaveForm();
+                          _handleSaveForm(context);
                         },
                         onEditingComplete: () {
                           setState(() {});
                         },
                         onSaved: (value) {
-                          _newProduct.imageUrl = value!;
+                          _editingProduct.imageUrl = value!;
                         },
+                        maxLength: 100,
+                        autovalidateMode: AutovalidateMode.always,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a image url';
+                          } else if (!value.startsWith('http://') && !value.startsWith('https://')) {
+                            return 'Please enter a valid url';
                           }
+
                           return null;
                         },
                       ),
