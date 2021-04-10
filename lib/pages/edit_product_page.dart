@@ -1,3 +1,4 @@
+import 'package:daily_shop/providers/product.dart';
 import 'package:flutter/material.dart';
 
 class EditProductPage extends StatefulWidget {
@@ -12,11 +13,21 @@ class _EditProductPageState extends State<EditProductPage> {
   final _imageUrlController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
 
+  final _form = GlobalKey<FormState>();
+  var _newProduct = Product(
+    id: '',
+    title: '',
+    price: 0.0,
+    description: '',
+    imageUrl: '',
+    isFavorite: false
+  );
+
   @override
   void initState() {
     super.initState();
 
-    _imageUrlFocusNode.addListener(_handlerUpdateImageUrl);
+    _imageUrlFocusNode.addListener(_handleUpdateImageUrl);
   }
 
   @override
@@ -27,24 +38,47 @@ class _EditProductPageState extends State<EditProductPage> {
     _imageUrlController.dispose();
     _imageUrlFocusNode.dispose();
 
-    _imageUrlFocusNode.removeListener(_handlerUpdateImageUrl);
+    _imageUrlFocusNode.removeListener(_handleUpdateImageUrl);
 
     super.dispose();
   }
 
-  _handlerUpdateImageUrl() {
+  void _handleUpdateImageUrl() {
     if (!_imageUrlFocusNode.hasFocus) {
       setState(() {});
     }
   }
 
+  void _handleSaveForm() {
+    bool validated = _form.currentState!.validate();
+
+    if (!validated) return;
+
+    _form.currentState!.save();
+
+    print(_newProduct.title);
+    print(_newProduct.price);
+    print(_newProduct.description);
+    print(_newProduct.imageUrl);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Edit Product')),
+      appBar: AppBar(
+        title: Text('Edit Product'),
+        actions: [
+          TextButton(
+            child: Text('SAVE'),
+            onPressed: _handleSaveForm,
+            style: TextButton.styleFrom(primary: Colors.white),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: Form(
+          key: _form,
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -58,6 +92,15 @@ class _EditProductPageState extends State<EditProductPage> {
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_priceFocusNode);
                   },
+                  onSaved: (value) {
+                    _newProduct.title = value!;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a title';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
@@ -69,6 +112,17 @@ class _EditProductPageState extends State<EditProductPage> {
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_titleFocusNode);
                   },
+                  onSaved: (value) {
+                    if (value == null || value.isEmpty) return;
+
+                    _newProduct.price = double.parse(value);
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a price';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
@@ -77,6 +131,9 @@ class _EditProductPageState extends State<EditProductPage> {
                   focusNode: _descriptionFocusNode,
                   maxLines: 3,
                   keyboardType: TextInputType.multiline,
+                  onSaved: (value) {
+                    _newProduct.description = value!;
+                  },
                 ),
                 Row(
                   children: [
@@ -87,9 +144,7 @@ class _EditProductPageState extends State<EditProductPage> {
                       decoration: BoxDecoration(
                         border: Border.all(width: 1, color: Colors.grey),
                       ),
-                      child: _imageUrlController.text.isEmpty
-                          ? Text('Enter a url')
-                          : Image.network(_imageUrlController.text, fit: BoxFit.cover),
+                      child: _imageUrlController.text.isEmpty ? Text('Enter a url') : Image.network(_imageUrlController.text, fit: BoxFit.cover),
                     ),
                     Expanded(
                       child: TextFormField(
@@ -101,10 +156,19 @@ class _EditProductPageState extends State<EditProductPage> {
                         keyboardType: TextInputType.url,
                         textInputAction: TextInputAction.done,
                         onFieldSubmitted: (_) {
-                          FocusScope.of(context).requestFocus(_titleFocusNode);
+                          _handleSaveForm();
                         },
                         onEditingComplete: () {
                           setState(() {});
+                        },
+                        onSaved: (value) {
+                          _newProduct.imageUrl = value!;
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a image url';
+                          }
+                          return null;
                         },
                       ),
                     ),
