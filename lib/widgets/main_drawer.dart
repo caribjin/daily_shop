@@ -39,6 +39,7 @@ class MainDrawer extends StatelessWidget {
           ),
           SizedBox(height: 20),
           buildListMenu('Products', Icons.shop, () => Navigator.of(context).pushNamed('/')),
+          buildListMenu('Manage Products', Icons.edit_rounded, () => Navigator.of(context).pushNamed('/user-products')),
           buildListMenu('Orders', Icons.payment, () => Navigator.of(context).pushNamed('/orders')),
         ],
       ),

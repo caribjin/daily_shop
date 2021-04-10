@@ -9,6 +9,7 @@ import 'package:daily_shop/providers/cart.dart';
 import 'package:daily_shop/pages/edit_product_page.dart';
 import 'package:daily_shop/pages/orders_page.dart';
 import 'package:daily_shop/providers/orders.dart';
+import 'package:daily_shop/pages/user_product_page.dart';
 
 import 'providers/products.dart';
 
@@ -36,6 +37,8 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (_) => HomePage(),
           '/product': (_) => ProductDetailPage(),
+          '/user-products': (_) => UserProductPage(),
+          '/edit-product': (_) => EditProductPage(),
           '/cart': (_) => CartPage(),
           '/edit': (_) => EditProductPage(),
           '/orders': (_) => OrdersPage(),
