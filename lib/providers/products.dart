@@ -59,6 +59,10 @@ class Products with ChangeNotifier {
     return _items.firstWhere((p) => p.id == id);
   }
 
+  int findIndexById(String id) {
+    return _items.indexWhere((p) => p.id == id);
+  }
+
   void addItem(Product product) {
     if (product.id.isEmpty) {
       product.id = DateTime.now().toIso8601String();
@@ -70,16 +74,17 @@ class Products with ChangeNotifier {
   }
 
   void updateItem(String id, Product product) {
-    Product? targetProduct = findById(id);
+    Product targetProduct = findById(id);
 
-    targetProduct = Product(
-      id: targetProduct.id,
-      title: product.title,
-      price: product.price,
-      description: product.description,
-      imageUrl: product.imageUrl,
-      isFavorite: targetProduct.isFavorite,
-    );
+    targetProduct = product;
+
+    notifyListeners();
+  }
+
+  void deleteItem(String id) {
+    int targetIndex = findIndexById(id);
+
+    _items.removeAt(targetIndex);
 
     notifyListeners();
   }
