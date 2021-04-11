@@ -22,13 +22,17 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  toJson() {
-    return {
+  toJson({bool includeId = true}) {
+    var result = {
       'title': title,
       'description': description,
       'price': price,
       'imageUrl': imageUrl,
       'isFavorite': isFavorite,
     };
+
+    if (includeId) result['id'] = id;
+
+    return result;
   }
 }

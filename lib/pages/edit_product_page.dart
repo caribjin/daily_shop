@@ -74,24 +74,16 @@ class _EditProductPageState extends State<EditProductPage> {
     if (_id == '') {
       try {
         await productsData.addItem(_editingProduct);
+        Navigator.of(context).pop();
       } catch (error) {
         _handleError(context, error);
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
       }
     } else {
       try {
         await productsData.updateItem(_id, _editingProduct);
+        Navigator.of(context).pop();
       } catch (error) {
         _handleError(context, error);
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
       }
     }
   }
@@ -102,23 +94,22 @@ class _EditProductPageState extends State<EditProductPage> {
     });
 
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('An error occurred while saving data.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Close'),
-              ),
-            ],
-          );
-        }).then((_) {
-      Navigator.of(context).pop();
-    });
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('An error occurred while saving data.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

@@ -12,7 +12,7 @@ enum ProductsFilter {
   OnlyFavorite,
 }
 
-final productsEndpoint = Uri.parse('https://dailyshop-5ccfc-default-rtdb11.firebaseio.com/products.json');
+const productsEndpoint = 'https://dailyshop-5ccfc-default-rtdb.firebaseio.com/products.json';
 
 class Products with ChangeNotifier {
   List<Product> _items = [
@@ -68,7 +68,7 @@ class Products with ChangeNotifier {
 
   Future<void> addItem(Product product) async {
     try {
-      var response = await http.post(productsEndpoint, body: json.encode(product.toJson()));
+      final response = await http.post(Uri.parse(productsEndpoint), body: json.encode(product.toJson(includeId: false)));
 
       product.id = json.decode(response.body)['name'];
       _items.add(product);
@@ -81,7 +81,7 @@ class Products with ChangeNotifier {
 
   Future<void> updateItem(String id, Product product) async {
     try {
-      await http.put(productsEndpoint, body: json.encode(product.toJson()));
+      await http.put(Uri.parse(productsEndpoint + '/' + id), body: json.encode(product.toJson()));
       Product targetProduct = findById(id);
       targetProduct = product;
 
@@ -95,7 +95,7 @@ class Products with ChangeNotifier {
     Product targetProduct = findById(id);
 
     try {
-      await http.delete(productsEndpoint, body: json.encode(targetProduct.toJson()));
+      await http.delete(Uri.parse(productsEndpoint + '/' + id), body: json.encode(targetProduct.toJson()));
       _items.remove(targetProduct);
 
       notifyListeners();
