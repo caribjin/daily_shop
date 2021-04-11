@@ -21,4 +21,14 @@ class Product with ChangeNotifier {
     this.isFavorite = !this.isFavorite;
     notifyListeners();
   }
+
+  toJson() {
+    return {
+      'title': title,
+      'description': description,
+      'price': price,
+      'imageUrl': imageUrl,
+      'isFavorite': isFavorite,
+    };
+  }
 }
