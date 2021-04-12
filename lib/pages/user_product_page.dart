@@ -6,6 +6,11 @@ import 'package:daily_shop/providers/products.dart';
 import 'package:daily_shop/providers/product.dart';
 
 class UserProductPage extends StatelessWidget {
+  Future<void> _handleRefresh(BuildContext context) {
+    print('Refresh');
+    return Provider.of<Products>(context, listen: false).fetchItems();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Products productsData = Provider.of<Products>(context);
@@ -23,30 +28,33 @@ class UserProductPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-          itemCount: products.length,
-          itemBuilder: (_, index) {
-            return Column(
-              children: [
-                Container(
-                  child: UserProductItem(product: products[index]),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey,
-                        blurRadius: 4,
-                        offset: Offset(2, 2),
-                      ),
-                    ],
+      body: RefreshIndicator(
+        onRefresh: () => _handleRefresh(context),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+            itemCount: products.length,
+            itemBuilder: (_, index) {
+              return Column(
+                children: [
+                  Container(
+                    child: UserProductItem(product: products[index]),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          blurRadius: 4,
+                          offset: Offset(2, 2),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Divider(),
-              ],
-            );
-          },
+                  Divider(),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

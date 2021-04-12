@@ -18,15 +18,21 @@ class ProductsOverviewPage extends StatefulWidget {
 
 class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   bool _isInit = true;
+  bool _isLoading = false;
 
   @override
   void didChangeDependencies() {
     if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+
       Provider.of<Products>(context).fetchItems().then((_) {
-        print('OK');
+        setState(() {
+          _isLoading = false;
+        });
       });
     }
-
     _isInit = false;
 
     super.didChangeDependencies();
@@ -34,7 +40,10 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ProductsGrid(widget._filter);
+    return _isLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : ProductsGrid(widget._filter);
   }
 }
-

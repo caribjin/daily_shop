@@ -16,32 +16,29 @@ class UserProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: Theme
-            .of(context)
-            .primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
         backgroundImage: NetworkImage(
           product.imageUrl,
         ),
       ),
-      title: Text(product.title),
+      title: Text(
+        product.title,
+        overflow: TextOverflow.ellipsis,
+      ),
       subtitle: Text(product.price.toStringAsFixed(2)),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
             icon: Icon(Icons.edit),
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             onPressed: () {
               Navigator.of(context).pushNamed('/edit-product', arguments: product.id);
             },
           ),
           IconButton(
             icon: Icon(Icons.delete),
-            color: Theme
-                .of(context)
-                .errorColor,
+            color: Theme.of(context).errorColor,
             onPressed: () {
               showDialog(
                 context: context,

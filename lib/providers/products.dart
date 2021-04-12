@@ -51,17 +51,24 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchItems() async {
-    final response = await http.get(Uri.parse(productsEndpoint));
-    final data = json.decode(response.body) as Map<String, dynamic>;
+    try {
+      final response = await http.get(Uri.parse(productsEndpoint));
+      final data = json.decode(response.body) as Map<String, dynamic>;
+      List<Product> newProducts = [];
 
-    data.forEach((id, data) {
-      _items.add(Product.fromMap({
-        'id': id,
-        ...data
-      }));
-    });
+      data.forEach((id, data) {
+        newProducts.add(Product.fromMap({
+          'id': id,
+          ...data
+        }));
+      });
 
-    notifyListeners();
+      _items = newProducts;
+
+      notifyListeners();
+    } catch(error) {
+      throw error;
+    }
   }
 
   List<Product> getFilteredItems(ProductsFilter filter) {
@@ -88,7 +95,7 @@ class Products with ChangeNotifier {
       _items.add(product);
 
       notifyListeners();
-    } catch (error) {
+    } catch(error) {
       throw error;
     }
   }
@@ -100,7 +107,7 @@ class Products with ChangeNotifier {
       targetProduct = product;
 
       notifyListeners();
-    } catch (error) {
+    } catch(error) {
       throw error;
     }
   }
@@ -113,7 +120,7 @@ class Products with ChangeNotifier {
       _items.remove(targetProduct);
 
       notifyListeners();
-    } catch (error) {
+    } catch(error) {
       throw error;
     }
   }
