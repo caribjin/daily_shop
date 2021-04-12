@@ -7,7 +7,6 @@ import 'package:daily_shop/providers/product.dart';
 
 class UserProductPage extends StatelessWidget {
   Future<void> _handleRefresh(BuildContext context) {
-    print('Refresh');
     return Provider.of<Products>(context, listen: false).fetchItems();
   }
 

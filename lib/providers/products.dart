@@ -12,8 +12,6 @@ enum ProductsFilter {
   OnlyFavorite,
 }
 
-const productsEndpoint = 'https://dailyshop-5ccfc-default-rtdb.firebaseio.com/products.json';
-
 class Products with ChangeNotifier {
   List<Product> _items = [
     // Product(
@@ -52,7 +50,10 @@ class Products with ChangeNotifier {
 
   Future<void> fetchItems() async {
     try {
-      final response = await http.get(Uri.parse(productsEndpoint));
+      final response = await http.get(makeProductEndpointUri());
+
+      if (response.body == 'null') return;
+
       final data = json.decode(response.body) as Map<String, dynamic>;
       List<Product> newProducts = [];
 
@@ -89,7 +90,7 @@ class Products with ChangeNotifier {
 
   Future<void> addItem(Product product) async {
     try {
-      final response = await http.post(Uri.parse(productsEndpoint), body: json.encode(product.toJson(includeId: false)));
+      final response = await http.post(makeProductEndpointUri(), body: json.encode(product.toJson(includeId: false)));
 
       product.id = json.decode(response.body)['name'];
       _items.add(product);
@@ -102,7 +103,7 @@ class Products with ChangeNotifier {
 
   Future<void> updateItem(String id, Product product) async {
     try {
-      await http.put(Uri.parse(productsEndpoint + '/' + id), body: json.encode(product.toJson()));
+      await http.put(makeProductEndpointUri(id), body: json.encode(product.toJson(includeId: false)));
       Product targetProduct = findById(id);
       targetProduct = product;
 
@@ -113,15 +114,23 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteItem(String id) async {
-    Product targetProduct = findById(id);
-
     try {
-      await http.delete(Uri.parse(productsEndpoint + '/' + id), body: json.encode(targetProduct.toJson()));
+      await http.delete(makeProductEndpointUri(id));
+      Product targetProduct = findById(id);
       _items.remove(targetProduct);
 
       notifyListeners();
     } catch(error) {
       throw error;
     }
+  }
+
+  Uri makeProductEndpointUri([String id = '']) {
+    const productsEndpoint = 'https://dailyshop-5ccfc-default-rtdb.firebaseio.com/products';
+    const format = '.json';
+
+    if (id.isNotEmpty) id = '/$id';
+
+    return Uri.parse('$productsEndpoint$id$format');
   }
 }

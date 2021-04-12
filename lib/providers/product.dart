@@ -30,7 +30,7 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  toJson({bool includeId = true}) {
+  Map<String, dynamic>toJson({bool includeId = true}) {
     var result = {
       'title': title,
       'description': description,

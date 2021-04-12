@@ -1,3 +1,4 @@
+import 'package:daily_shop/providers/products.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -43,6 +44,7 @@ class ProductItem extends StatelessWidget {
                       ),
                       onPressed: () {
                         product.toggleFavoriteState();
+                        Provider.of<Products>(context, listen: false).updateItem(product.id, product);
                       },
                     ),
                   ),
