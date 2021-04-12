@@ -1,3 +1,5 @@
+import 'package:daily_shop/pages/auth_page.dart';
+import 'package:daily_shop/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<Auth>(create: (_) => Auth()),
         ChangeNotifierProvider<Products>(create: (_) => Products()),
         ChangeNotifierProvider<Cart>(create: (_) => Cart()),
         ChangeNotifierProvider<Orders>(create: (_) => Orders()),
@@ -33,9 +36,10 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.deepOrange,
           fontFamily: 'Lato',
         ),
-        initialRoute: '/',
+        initialRoute: '/auth',
         routes: {
           '/': (_) => HomePage(),
+          '/auth': (_) => AuthPage(),
           '/product': (_) => ProductDetailPage(),
           '/user-products': (_) => UserProductPage(),
           '/edit-product': (_) => EditProductPage(),
