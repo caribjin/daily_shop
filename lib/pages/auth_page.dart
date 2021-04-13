@@ -103,12 +103,10 @@ class _AuthCardState extends State<AuthCard> {
     var response;
 
     if (_authMode == AuthMode.Login) {
-      response = await Provider.of<Auth>(context, listen: false).signIn(_authData['email']!, _authData['password']!);
+      response = await Provider.of<Auth>(context, listen: false).logIn(_authData['email']!, _authData['password']!);
     } else {
       response = await Provider.of<Auth>(context, listen: false).signUp(_authData['email']!, _authData['password']!);
     }
-
-    print(json.decode(response.body));
 
     setState(() {
       _isLoading = false;

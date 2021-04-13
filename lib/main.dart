@@ -25,28 +25,36 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<Auth>(create: (_) => Auth()),
-        ChangeNotifierProvider<Products>(create: (_) => Products()),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          create: (_) => Products('', []),
+          update: (_, auth, previousProducts) => Products(auth.token?? '', previousProducts == null ? [] : previousProducts.items),
+        ),
         ChangeNotifierProvider<Cart>(create: (_) => Cart()),
         ChangeNotifierProvider<Orders>(create: (_) => Orders()),
       ],
-      child: MaterialApp(
-        title: 'Daily Shop',
-        theme: ThemeData(
-          primarySwatch: Colors.purple,
-          accentColor: Colors.deepOrange,
-          fontFamily: 'Lato',
-        ),
-        initialRoute: '/auth',
-        routes: {
-          '/': (_) => HomePage(),
-          '/auth': (_) => AuthPage(),
-          '/product': (_) => ProductDetailPage(),
-          '/user-products': (_) => UserProductPage(),
-          '/edit-product': (_) => EditProductPage(),
-          '/cart': (_) => CartPage(),
-          '/edit': (_) => EditProductPage(),
-          '/orders': (_) => OrdersPage(),
-          '/settings': (_) => SettingsPage(),
+      child: Consumer<Auth>(
+        builder: (BuildContext context, auth, _) {
+          return MaterialApp(
+            title: 'Daily Shop',
+            theme: ThemeData(
+              primarySwatch: Colors.purple,
+              accentColor: Colors.deepOrange,
+              fontFamily: 'Lato',
+            ),
+            home: auth.isAuth ? HomePage() : AuthPage(),
+            // initialRoute: '/auth',
+            routes: {
+              // '/': (_) => HomePage(),
+              '/auth': (_) => AuthPage(),
+              '/product': (_) => ProductDetailPage(),
+              '/user-products': (_) => UserProductPage(),
+              '/edit-product': (_) => EditProductPage(),
+              '/cart': (_) => CartPage(),
+              '/edit': (_) => EditProductPage(),
+              '/orders': (_) => OrdersPage(),
+              '/settings': (_) => SettingsPage(),
+            },
+          );
         },
       ),
     );

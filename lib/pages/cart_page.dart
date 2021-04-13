@@ -37,8 +37,6 @@ class CartPage extends StatelessWidget {
                   onPressed: () {
                     Provider.of<Orders>(context, listen: false).addItem(cartItems, cartData.totalAmount);
                     cartData.clear();
-
-                    print(Provider.of<Orders>(context).orders);
                   },
                 ),
               ],
