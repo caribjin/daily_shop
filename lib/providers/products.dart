@@ -130,8 +130,8 @@ class Products with ChangeNotifier {
   }
 
   Uri makeProductEndpointUri([String id = '']) {
-    final productsEndpoint = 'https://dailyshop-5ccfc-default-rtdb.firebaseio.com/products?auth=$authToken';
-    const format = '.json';
+    const productsEndpoint = 'https://dailyshop-5ccfc-default-rtdb.firebaseio.com/products';
+    final format = '.json?auth=$authToken';
 
     if (id.isNotEmpty) id = '/$id';
 
