@@ -27,11 +27,13 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
         _isLoading = true;
       });
 
-      Provider.of<Products>(context).fetchItems().then((_) {
-        setState(() {
-          _isLoading = false;
+      if (Products != null) {
+        Provider.of<Products>(context).fetchItems().then((_) {
+          setState(() {
+            _isLoading = false;
+          });
         });
-      });
+      }
     }
     _isInit = false;
 

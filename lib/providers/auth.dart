@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 const apiKey = 'AIzaSyAc7NzHZGf87a_msO7AyLzCpilww2qRspk';
 
 class Auth with ChangeNotifier {
@@ -50,7 +52,12 @@ class Auth with ChangeNotifier {
     _expireDate = DateTime.now().add(Duration(seconds: int.parse(responseJson['expiresIn'])));
     _userId = responseJson['localId'];
 
+    _autoLogout();
+
     notifyListeners();
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('auth', json.encode(toJson()));
 
     return response;
   }
@@ -63,7 +70,28 @@ class Auth with ChangeNotifier {
     return _authenticate(email, password, 'signInWithPassword');
   }
 
-  void logOut() {
+  Future<bool> tryAutoLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (!prefs.containsKey('auth')) return false;
+
+    final authData = json.decode(prefs.getString('auth')!) as Map<String, dynamic>;
+    final expireDate = DateTime.parse(authData['expireDate']);
+
+    if (expireDate.isBefore(DateTime.now())) return false;
+
+    _token = authData['token'];
+    _userId = authData['userId'];
+    _expireDate = expireDate;
+
+    notifyListeners();
+
+    _autoLogout();
+
+    return true;
+  }
+
+  Future<void> logOut() async {
     _token = null;
     _expireDate = null;
     _userId = null;
@@ -71,6 +99,9 @@ class Auth with ChangeNotifier {
     _cancelTimer();
 
     notifyListeners();
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 
   void _cancelTimer() {
@@ -84,5 +115,13 @@ class Auth with ChangeNotifier {
 
     final timeToExpire = _expireDate!.difference(DateTime.now()).inSeconds;
     _authTimer = Timer(Duration(seconds: timeToExpire), logOut);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'token': _token,
+      'expireDate': _expireDate == null ? '' : _expireDate!.toIso8601String(),
+      'userId': _userId
+    };
   }
 }

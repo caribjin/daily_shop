@@ -44,7 +44,10 @@ class MainDrawer extends StatelessWidget {
           buildListMenu('Orders', Icons.payment, () => Navigator.of(context).pushNamed('/orders')),
           Divider(),
           buildListMenu('Manage Products', Icons.edit_rounded, () => Navigator.of(context).pushNamed('/user-products')),
-          buildListMenu('Logout', Icons.logout, () => Provider.of<Auth>(context, listen: false).logOut()),
+          buildListMenu('Logout', Icons.logout, () {
+            Navigator.of(context).pushReplacementNamed('/');
+            Provider.of<Auth>(context, listen: false).logOut();
+          }),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:daily_shop/pages/auth_page.dart';
+import 'package:daily_shop/pages/splash_page.dart';
 import 'package:daily_shop/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<Auth>(create: (_) => Auth()),
         ChangeNotifierProxyProvider<Auth, Products>(
           create: (_) => Products('', []),
-          update: (_, auth, previousProducts) => Products(auth.token?? '', previousProducts == null ? [] : previousProducts.items),
+          update: (_, auth, previousProducts) => Products(auth.token ?? '', previousProducts == null ? [] : previousProducts.items),
         ),
         ChangeNotifierProvider<Cart>(create: (_) => Cart()),
         ChangeNotifierProvider<Orders>(create: (_) => Orders()),
@@ -41,7 +42,16 @@ class MyApp extends StatelessWidget {
               accentColor: Colors.deepOrange,
               fontFamily: 'Lato',
             ),
-            home: auth.isAuth ? HomePage() : AuthPage(),
+            home: auth.isAuth
+                ? HomePage()
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (context, authSnapshot) {
+                      if (authSnapshot.connectionState == ConnectionState.waiting) {
+                        return SplashPage();
+                      }
+                      return AuthPage();
+                    }),
             // initialRoute: '/auth',
             routes: {
               // '/': (_) => HomePage(),
