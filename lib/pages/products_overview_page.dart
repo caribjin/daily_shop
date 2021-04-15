@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:daily_shop/widgets/products_grid.dart';
 import 'package:provider/provider.dart';
 
-// import '../dummy_data.dart';
-
 class ProductsOverviewPage extends StatefulWidget {
   final ProductsFilter _filter;
 
@@ -27,13 +25,11 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
         _isLoading = true;
       });
 
-      if (Products != null) {
-        Provider.of<Products>(context).fetchItems().then((_) {
-          setState(() {
-            _isLoading = false;
-          });
+      Provider.of<Products>(context).fetchItems().then((_) {
+        setState(() {
+          _isLoading = false;
         });
-      }
+      });
     }
     _isInit = false;
 
