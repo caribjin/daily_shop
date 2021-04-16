@@ -1,6 +1,6 @@
-import 'package:daily_shop/pages/auth_page.dart';
-import 'package:daily_shop/pages/splash_page.dart';
-import 'package:daily_shop/providers/auth.dart';
+import 'package:daily_shop/pages/add_place_page.dart';
+import 'package:daily_shop/pages/place_detail_page.dart';
+import 'package:daily_shop/pages/places_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,8 +13,11 @@ import 'package:daily_shop/pages/edit_product_page.dart';
 import 'package:daily_shop/pages/orders_page.dart';
 import 'package:daily_shop/providers/orders.dart';
 import 'package:daily_shop/pages/user_product_page.dart';
-
-import 'providers/products.dart';
+import 'package:daily_shop/pages/auth_page.dart';
+import 'package:daily_shop/pages/splash_page.dart';
+import 'package:daily_shop/providers/auth.dart';
+import 'package:daily_shop/providers/places.dart';
+import 'package:daily_shop/providers/products.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,6 +35,7 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<Cart>(create: (_) => Cart()),
         ChangeNotifierProvider<Orders>(create: (_) => Orders()),
+        ChangeNotifierProvider<Places>(create: (_) => Places()),
       ],
       child: Consumer<Auth>(
         builder: (BuildContext context, auth, _) {
@@ -63,6 +67,9 @@ class MyApp extends StatelessWidget {
               '/edit': (_) => EditProductPage(),
               '/orders': (_) => OrdersPage(),
               '/settings': (_) => SettingsPage(),
+              '/places': (_) => PlacesListPage(),
+              '/place': (_) => PlaceDetailPage(),
+              '/add-place': (_) => AddPlacePage(),
             },
           );
         },

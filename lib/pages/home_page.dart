@@ -1,4 +1,5 @@
 import 'package:daily_shop/pages/cart_page.dart';
+import 'package:daily_shop/pages/places_list_page.dart';
 import 'package:daily_shop/providers/cart.dart';
 import 'package:daily_shop/widgets/badge.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     super.initState();
 
     _tabController = TabController(
-      length: 3,
+      length: 4,
       vsync: this,
       initialIndex: 0,
     );
@@ -41,6 +42,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       appBar: AppBar(
         title: const Text('Daily Shop'),
         actions: [
+          IconButton(icon: Icon(Icons.add), onPressed: () {
+            Navigator.of(context).pushNamed('/add-place');
+          },),
           Consumer<Cart>(
             builder: (_, cart, child) {
               return Badge(
@@ -83,6 +87,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           ProductsOverviewPage(_filter),
           CartPage(),
           FavoritesPage(),
+          PlacesListPage(),
         ],
       ),
       drawer: MainDrawer(),
@@ -103,7 +108,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             Tab(
               icon: Icon(Icons.favorite),
               text: 'Favorites',
-            )
+            ),
+            Tab(
+              icon: Icon(Icons.place),
+              text: 'Places',
+            ),
           ],
           labelColor: Colors.white,
           unselectedLabelColor: Theme.of(context).unselectedWidgetColor,
