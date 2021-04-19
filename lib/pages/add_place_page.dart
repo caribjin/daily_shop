@@ -1,8 +1,30 @@
+import 'dart:io';
+
+import 'package:daily_shop/providers/places.dart';
 import 'package:daily_shop/widgets/image_input.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class AddPlacePage extends StatelessWidget {
+class AddPlacePage extends StatefulWidget {
+  @override
+  _AddPlacePageState createState() => _AddPlacePageState();
+}
+
+class _AddPlacePageState extends State<AddPlacePage> {
   final TextEditingController _titleController = TextEditingController();
+
+  late File? _pickedImage;
+
+  void _selectImage(File pickedImage) {
+    _pickedImage = pickedImage;
+  }
+
+  void _savePlace() {
+    if (_titleController.text.isEmpty || _pickedImage == null) return;
+
+    Provider.of<Places>(context, listen: false).addPlace(_titleController.text, _pickedImage!);
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +44,7 @@ class AddPlacePage extends StatelessWidget {
                       controller: _titleController,
                     ),
                     SizedBox(height: 10),
-                    ImageInput(),
+                    ImageInput(_selectImage),
                   ],
                 ),
               ),
@@ -35,7 +57,9 @@ class AddPlacePage extends StatelessWidget {
               elevation: 0,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            onPressed: () {},
+            onPressed: () {
+              _savePlace();
+            },
           ),
         ],
       ),
