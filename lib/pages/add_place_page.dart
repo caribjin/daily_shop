@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:daily_shop/providers/places.dart';
 import 'package:daily_shop/widgets/image_input.dart';
+import 'package:daily_shop/widgets/location_input.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,6 +46,8 @@ class _AddPlacePageState extends State<AddPlacePage> {
                     ),
                     SizedBox(height: 10),
                     ImageInput(_selectImage),
+                    SizedBox(height: 10),
+                    LocationInput(),
                   ],
                 ),
               ),

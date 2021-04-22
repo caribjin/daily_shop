@@ -42,25 +42,26 @@ class _ImageInputState extends State<ImageInput> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          width: 150,
-          height: 150,
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 1,
-              color: Colors.grey,
+        Expanded(
+          child: Container(
+            // width: 150,
+            height: 150,
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 1,
+                color: Colors.grey,
+              ),
             ),
+            child: _storedImage != null
+                ? Image.file(
+                    _storedImage!,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  )
+                : Text('No Image Taken'),
+            alignment: Alignment.center,
           ),
-          child: _storedImage != null
-              ? Image.file(
-                  _storedImage!,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                )
-              : Text('No Image Taken'),
-          alignment: Alignment.center,
         ),
         SizedBox(width: 10),
         TextButton.icon(
@@ -68,6 +69,7 @@ class _ImageInputState extends State<ImageInput> {
           label: Text('Take Picture'),
           onPressed: _takePicture,
         ),
+        SizedBox(width: 10),
       ],
     );
   }
